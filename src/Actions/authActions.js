@@ -12,6 +12,7 @@ import {
   USER_LOADING,
   LOGOUT_SUCCESS,
   GET_ALL_PROFILES,
+  SET_CURRENT_PROFILE,
 } from "./types";
 
 export const userLodaing = () => ({
@@ -42,6 +43,7 @@ export const loadUser = () => (dispatch, getState) => {
     });
   }
 };
+
 export const tokenConfig = (getState) => {
   //Get token from Local Storage
   let token = getState().auth.token;
@@ -59,6 +61,16 @@ export const tokenConfig = (getState) => {
   }
   return config;
 };
+
+export const setCurrentProfile = (profileId) => (dispatch, getState) => {
+  dispatch({
+    type: SET_CURRENT_PROFILE,
+    payload: profileId,
+  });
+  let io = getState().socket.socket;
+  io.emit("changeProfile", JSON.stringify(profileId));
+};
+
 export const login = (dataForLogin) => (dispatch, getState) => {
   const config = {
     headers: {

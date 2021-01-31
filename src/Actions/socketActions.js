@@ -5,27 +5,31 @@ import { socketConstants } from "../constants/socketCOnstants";
 import io from "socket.io-client";
 
 export function connectToSocket() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     new Promise((resolve, reject) => {
-      const socket = io("127.0.0.1:7000", {
-        query: {
-          token: JSON.parse(localStorage.getItem("user")).token,
-          profile: JSON.parse(localStorage.getItem("profiles"))[1].profile.id,
-        },
-        transports: ["websocket"],
-        jsonp: false,
-        forceNew: true,
-      });
-      socket.on("connect", () => {
-        resolve(socket);
-      });
-    })
-      .then((socket) => {
-        dispatch({ type: socketConstants.CONNECT, payload: socket });
-        socket.on("newMessage", (data) => {
-          alert(data);
+      if (localStorage.getItem("user")) {
+        const socket = io("18.193.120.101:9000", {
+          query: {
+            token: JSON.parse(localStorage.getItem("user")).token,
+            profile: getState().auth.currentProfile
+              ? getState().auth.currentProfile
+              : 138,
+          },
+          transports: ["websocket"],
+          jsonp: false,
+          forceNew: true,
         });
-      })
-      .catch((err) => console.log(alert(err)));
+
+        socket.on("connect", () => {
+          resolve(socket);
+        });
+
+        socket.on("newMessage", (data) => {
+          console.log(data);
+        });
+      }
+    }).then((socket) => {
+      dispatch({ type: socketConstants.CONNECT, payload: socket });
+    });
   };
 }

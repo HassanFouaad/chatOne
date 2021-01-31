@@ -12,7 +12,6 @@ import HomePage from "./Components/HomePage";
 export const Main = () => {
   useEffect(() => {
     store.dispatch(loadUser());
-    store.dispatch(connectToSocket());
   }, []);
 
   return (

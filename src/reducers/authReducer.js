@@ -6,6 +6,7 @@ import {
   USER_LOADING,
   LOGOUT_SUCCESS,
   GET_ALL_PROFILES,
+  SET_CURRENT_PROFILE,
 } from "../Actions/types";
 
 const initialState = {
@@ -17,10 +18,16 @@ const initialState = {
   error: false,
   editSucess: false,
   profiles: [],
+  currentProfile: null,
 };
 
 export default function store(state = initialState, action) {
   switch (action.type) {
+    case SET_CURRENT_PROFILE:
+      return {
+        ...state,
+        currentProfile: action.payload,
+      };
     case USER_LOADING:
       return {
         ...state,
